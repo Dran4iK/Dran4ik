@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Загрузчик звука (Google Диск)</title>
+</head>
+<body>
+  <h2>Вставьте ссылку на звук с Google Диска</h2>
+  <input type="text" id="linkInput" placeholder="Вставьте ссылку сюда" style="width: 80%;">
+  <button onclick="generateLink()">Создать ссылку</button>
+
+  <p id="result" style="margin-top:20px; word-break: break-word;"></p>
+
+  <script>
+    function extractFileId(url) {
+      const regex = /\/d\/([a-zA-Z0-9_-]+)\//;
+      const match = url.match(regex);
+      return match ? match[1] : null;
+    }
+
+    function generateLink() {
+      const input = document.getElementById('linkInput').value.trim();
+      const fileId = extractFileId(input);
+
+      if (!fileId) {
+        alert('Неверная ссылка. Вставьте ссылку в формате https://drive.google.com/file/d/FILE_ID/view');
+        return;
+      }
+
+      const directLink = `https://drive.google.com/uc?export=download&id=${fileId}`;
+      const playerUrl = `${location.origin}/player.html?sound=${encodeURIComponent(directLink)}`;
+
+      const result = document.getElementById('result');
+      result.innerHTML = `Ваша ссылка для скримера:<br><a href="${playerUrl}" target="_blank">${playerUrl}</a>`;
+    }
+  </script>
+</body>
+</html>

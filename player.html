@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Скример</title>
+  <style>
+    body, html {
+      margin: 0; padding: 0; height: 100%;
+      display: flex; justify-content: center; align-items: center;
+      background: black; color: white; font-size: 24px;
+      user-select: none;
+      cursor: pointer;
+      text-align: center;
+    }
+  </style>
+</head>
+<body onclick="playSound()">
+  <div>Нажмите на экран, чтобы включить звук</div>
+
+  <script>
+    let audio;
+
+    function playSound() {
+      if (audio) return;
+
+      const params = new URLSearchParams(window.location.search);
+      const soundUrl = params.get('sound');
+
+      if (!soundUrl) {
+        alert('Звук не найден в ссылке');
+        return;
+      }
+
+      audio = new Audio(soundUrl);
+      audio.volume = 1.0;
+      audio.loop = true;
+      audio.play();
+
+      document.body.innerHTML = '<div style="color: red; font-size: 32px;">Звук играет! Обновите страницу, чтобы остановить.</div>';
+    }
+  </script>
+</body>
+</html>
