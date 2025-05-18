@@ -1,38 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8" />
-  <title>Загрузчик звука (Google Диск)</title>
+    <meta charset="UTF-8">
+    <title>Sound Share</title>
+    <style>
+        body { 
+            font-family: Arial; 
+            text-align: center; 
+            padding: 50px; 
+        }
+        button { 
+            padding: 12px 24px; 
+            font-size: 16px; 
+            margin-top: 10px; 
+            cursor: pointer;
+        }
+        #link { 
+            margin-top: 20px; 
+            word-break: break-all; 
+        }
+    </style>
 </head>
 <body>
-  <h2>Вставьте ссылку на звук с Google Диска</h2>
-  <input type="text" id="linkInput" placeholder="Вставьте ссылку сюда" style="width: 80%;">
-  <button onclick="generateLink()">Создать ссылку</button>
+    <h1>🔊 Загрузи звук (MP3, WAV)</h1>
+    <input type="file" id="audioFile" accept="audio/*">
+    <button id="myButton">Получить ссылку</button>
+    <div id="link"></div>
 
-  <p id="result" style="margin-top:20px; word-break: break-word;"></p>
-
-  <script>
-    function extractFileId(url) {
-      const regex = /\/d\/([a-zA-Z0-9_-]+)\//;
-      const match = url.match(regex);
-      return match ? match[1] : null;
-    }
-
-    function generateLink() {
-      const input = document.getElementById('linkInput').value.trim();
-      const fileId = extractFileId(input);
-
-      if (!fileId) {
-        alert('Неверная ссылка. Вставьте ссылку в формате https://drive.google.com/file/d/FILE_ID/view');
-        return;
-      }
-
-      const directLink = `https://drive.google.com/uc?export=download&id=${fileId}`;
-      const playerUrl = `${location.origin}/player.html?sound=${encodeURIComponent(directLink)}`;
-
-      const result = document.getElementById('result');
-      result.innerHTML = `Ваша ссылка для скримера:<br><a href="${playerUrl}" target="_blank">${playerUrl}</a>`;
-    }
-  </script>
+    <script>
+        document.getElementById("myButton").onclick = function() {
+            const file = document.getElementById("audioFile").files[0];
+            if (!file) {
+                alert("Сначала выбери файл!");
+                return;
+            }
+            
+            const audioURL = URL.createObjectURL(file);
+            const randomID = "id_" + Math.random().toString(36).substring(2, 9);
+            localStorage.setItem(randomID, audioURL);
+            
+            document.getElementById("link").innerHTML = `
+                Ссылка: <a href="play.html?id=${randomID}">play.html?id=${randomID}</a>
+                <p style="color: grey">Откройте в ЭТОМ ЖЕ браузере!</p>
+            `;
+        };
+    </script>
 </body>
 </html>
